@@ -3,7 +3,7 @@ const router = express.Router();
 const userModel = require('../models/users.model');
 
 //Add a user
-router.post('/post', (req, res) => {
+router.post('/user/add', (req, res) => {
     const user = new userModel({
         name: req.body.name,
         age: req.body.age
@@ -20,7 +20,7 @@ router.post('/post', (req, res) => {
 })
 
 //Get all users
-router.get('/getAll', async (req, res) => {
+router.get('/user/getall', async (req, res) => {
     try {
         const users = await userModel.find();
         res.json(users);
@@ -32,7 +32,7 @@ router.get('/getAll', async (req, res) => {
 })
 
 //Get a user by id 
-router.get('/getOne/:id', async (req, res) => {
+router.get('/user/findone/:id', async (req, res) => {
     try {
         const user = await userModel.findById(req.params.id);
         res.json(user);
@@ -44,7 +44,7 @@ router.get('/getOne/:id', async (req, res) => {
 })
 
 //Update a user by id
-router.patch('/update/:id', async (req, res) => {
+router.patch('/user/update/:id', async (req, res) => {
     try {
         const userId = req.params.id;
         const updatedUserData = req.body;
@@ -62,7 +62,7 @@ router.patch('/update/:id', async (req, res) => {
 })
 
 //Delete a user by id 
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/user/delete/:id', async (req, res) => {
     try {
         const userId = req.params.id;
         const userDeleted = await userModel.findByIdAndDelete(userId);
