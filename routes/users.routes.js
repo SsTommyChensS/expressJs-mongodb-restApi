@@ -23,7 +23,13 @@ router.post('/user/add', (req, res) => {
 router.get('/user/getall', async (req, res) => {
     try {
         const users = await userModel.find();
-        res.json(users);
+        if(users.length == 0) {
+            res.json({
+                message: 'Cannot find any users!',
+            });
+        } else {
+            res.json(users);
+        }
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -56,7 +62,7 @@ router.patch('/user/update/:id', async (req, res) => {
         res.send(userUpdated);
     } catch (error) {
         res.status(400).json({
-            message: error.message
+            message: 'Cannot find this user!',
         })
     }
 })
@@ -69,7 +75,7 @@ router.delete('/user/delete/:id', async (req, res) => {
         res.send(`User name ${userDeleted.name} has been deleted!`);
     } catch (error) {
         res.status(400).json({
-            message: error.message
+            message: 'Cannot find this user!'
         })
     }
 })
