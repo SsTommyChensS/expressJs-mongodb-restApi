@@ -1,28 +1,18 @@
 require('dotenv').config();
 
 const express = require('express');
-const mongoose = require('mongoose');
+const connectMongoServer = require('./config/db');
 const routes = require('./routes/index.routes');
 const app = express();
 
-//Connect mongo database
-const mongoString = process.env.DATABASE_URL;
-mongoose.set('strictQuery', false);
-mongoose.connect(mongoString);
+//Connect mongo server
+connectMongoServer();
 
-//Check the connection of database
-const db = mongoose.connection;
-db.on('error', () => {
-    console.log('Database connect failed!');
-});
-db.once('connected', () => {
-    console.log('Database connected!');
-})
 
 app.use(express.json());
 //Join available routes
-app.use('/api', routes);
-
-app.listen(3000, () => {
-    console.log(`Server started at port ${3000}`);
+const port = process.env.SERVER_PORT;
+app.use('/api', routes)
+app.listen(port, () => {
+    console.log(`Server started at port ${port}`);
 })
