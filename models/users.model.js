@@ -18,6 +18,28 @@ const userSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now()
+    }, 
+    information: {
+        fullname: {
+            type: String,
+            default: ''
+        },
+        gender: {
+            type: String,
+            default: 'male'
+        }, 
+        age: {
+            type: Number,
+            default: 18
+        },
+        address: {
+            type: String,
+            default: ''
+        },
+        country: {
+            type: String,
+            default: ''
+        }
     }
 })
 
