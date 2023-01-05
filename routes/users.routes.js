@@ -1,5 +1,5 @@
 const express = require('express');
-const { check, validationResult } = require('express-validator');
+const { check, body,  validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
@@ -13,7 +13,26 @@ router.post('/signup',[
     check('email', 'Please enter a valid email').isEmail(),
     check('password', 'Please enter a valid password').isLength({
         min: 6
-    })
+    }),
+    check('information').optional(),
+    check('information.fullname', 'Please enter a valid fullname')
+        .if(body('information').exists())
+        .not()
+        .isEmpty(),
+    check('information.gender', 'Please enter a valid gender')
+        .if(body('information').exists())
+        .isIn(['male', 'female', 'other']),
+    check('information.age', 'User must be 18 years or older')
+        .if(body('information').exists())
+        .isInt({ min: 18 }),
+    check('information.address', 'Please enter a valid address')
+        .if(body('information').exists())
+        .not()
+        .isEmpty(),
+    check('information.country', 'Please enter a valid country')
+        .if(body('information').exists())
+        .not()
+        .isEmpty()   
 ], async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
@@ -22,7 +41,7 @@ router.post('/signup',[
         });
     }
     const {
-        username, email, password
+        username, email, password, information
     } = req.body;
     try {
        let user = await userModel.findOne({
@@ -34,7 +53,7 @@ router.post('/signup',[
             });
        } 
 
-       user = new userModel({ username, email, password});
+       user = new userModel({ username, email, password, information });
 
        const salt = await bcrypt.genSalt(10);
        user.password = await bcrypt.hash(password, salt);
